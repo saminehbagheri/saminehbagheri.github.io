@@ -2,38 +2,40 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>second try - Hello, world! I'm Samineh Bagheri</title>
+	<title>A Simple Recommender System - Hello, world! I'm Samineh Bagheri</title>
 
   <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
 
     <meta content="Hello, world! I'm Samineh Bagheri" property="og:site_name">
   
-    <meta content="second try" property="og:title">
+    <meta content="A Simple Recommender System" property="og:title">
   
   
     <meta content="article" property="og:type">
   
   
-    <meta content="description blah blah" property="og:description">
+    <meta content="..." property="og:description">
   
   
     <meta content="http://139.6.66.22:4000/recommender-systems/" property="og:url">
   
   
-    <meta content="2018-04-26T12:32:20+02:00" property="article:published_time">
+    <meta content="2017-09-11T23:00:00+02:00" property="article:published_time">
     <meta content="http://139.6.66.22:4000/about/" property="article:author">
   
   
-    <meta content="http://139.6.66.22:4000/assets/img/i-rest.jpg" property="og:image">
+    <meta content="http://139.6.66.22:4000/assets/img/minion.jpg" property="og:image">
   
   
     
   
   
     
-    <meta content="Holidays" property="article:tag">
+    <meta content="Software" property="article:tag">
     
-    <meta content="Hawaii" property="article:tag">
+    <meta content="R-Blogger" property="article:tag">
+    
+    <meta content="CI" property="article:tag">
     
   
 
@@ -41,19 +43,19 @@
     <meta name="twitter:site" content="@">
     <meta name="twitter:creator" content="@">
   
-    <meta name="twitter:title" content="second try">
+    <meta name="twitter:title" content="A Simple Recommender System">
   
   
     <meta name="twitter:url" content="http://139.6.66.22:4000/recommender-systems/">
   
   
-    <meta name="twitter:description" content="description blah blah">
+    <meta name="twitter:description" content="...">
   
   
-    <meta name="twitter:image:src" content="http://139.6.66.22:4000/assets/img/i-rest.jpg">
+    <meta name="twitter:image:src" content="http://139.6.66.22:4000/assets/img/minion.jpg">
   
 
-	<meta name="description" content="description blah blah">
+	<meta name="description" content="...">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta property="og:image" content="">
@@ -122,13 +124,13 @@
   <div class="page-content">
     
     <div class="page-cover-image">
-      <img class="page-image" src=/assets/img/i-rest.jpg alt="second try">
+      <img class="page-image" src=/assets/img/minion.jpg alt="A Simple Recommender System">
     </div> <!-- End Page Cover Image -->
     
     <div class="wrap-content">
       <header class="header-page">
-        <h1 class="page-title">second try</h1>
-        <div class="page-date"><span>2018, Apr 26&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <h1 class="page-title">A Simple Recommender System</h1>
+        <div class="page-date"><span>2017, Sep 11&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
       </header>
       <h1 id="what-is-a-recommender-system">What is a Recommender System?</h1>
 
@@ -165,7 +167,7 @@
 
 <p>by minimzing the following optimization problem:</p>
 
-<p>\begin{} *{x^{(i)}} *{j:r(i,j)=1} ((<sup>{(j)})</sup>T x<sup>{(i)}-y</sup>{(i,j)})^2 $$</p>
+<script type="math/tex; mode=display">\\min\\limits\_{x^{(i)}} \\frac{1}{2} \\sum \\limits\_{j:r(i,j)=1} ((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2</script>
 
 <p>Now that we have <strong>X</strong>, we can find <strong>Θ</strong> by solving the following optimization problem:</p>
 
@@ -385,8 +387,10 @@
 
 <p>The gradients which we need:</p>
 
-<p><script type="math/tex">\\frac{\\partial J}{\\partial x\_k^{(i)}}=\\sum\\limits\_{j:r(i,j)=1}((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})\\theta^{(j)}\_k</script>
-<script type="math/tex">\\frac{\\partial J}{\\partial \\theta\_k^{(i)}}=\\sum\\limits\_{j:r(i,j)=1}((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})x^{(i)}\_k</script></p>
+<ul>
+  <li>$\frac{\partial J}{\partial x_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})\theta^{(j)}_k$</li>
+  <li>$\frac{\partial J}{\partial \theta_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})x^{(i)}_k$</li>
+</ul>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gradF</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
    </span><span class="n">TG</span><span class="o">&lt;-</span><span class="n">t</span><span class="p">((</span><span class="n">X</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span><span class="o">-</span><span class="n">myY</span><span class="p">)</span><span class="o">*</span><span class="n">myR</span><span class="p">)</span><span class="o">%*%</span><span class="n">X</span><span class="o">+</span><span class="n">lambda</span><span class="o">*</span><span class="n">Theta</span><span class="w">
@@ -445,7 +449,7 @@
 </span><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"The cost function after random initilization is %f"</span><span class="p">,</span><span class="n">iCost</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after random initilization is 50218.199660"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after random initilization is 50228.057258"
 </code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="n">TRAIN_RS</span><span class="p">){</span><span class="w">
@@ -535,15 +539,17 @@
 
       <div class="page-footer">
         <div class="page-share">
-          <a href="https://twitter.com/intent/tweet?text=second try&url=http://139.6.66.22:4000/recommender-systems/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://twitter.com/intent/tweet?text=A Simple Recommender System&url=http://139.6.66.22:4000/recommender-systems/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
           <a href="https://facebook.com/sharer.php?u=http://139.6.66.22:4000/recommender-systems/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
           <a href="https://plus.google.com/share?url=http://139.6.66.22:4000/recommender-systems/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
         </div>
         <div class="page-tag">
           
-            <a href="/tags#Holidays" class="tag">&#35; Holidays</a>
+            <a href="/tags#Software" class="tag">&#35; Software</a>
           
-            <a href="/tags#Hawaii" class="tag">&#35; Hawaii</a>
+            <a href="/tags#R-Blogger" class="tag">&#35; R-Blogger</a>
+          
+            <a href="/tags#CI" class="tag">&#35; CI</a>
           
         </div>
       </div>
