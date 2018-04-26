@@ -1,0 +1,404 @@
+<h1 id="what-is-a-recommender-system">What is a Recommender System?</h1>
+
+<center>
+![Caption for the picture.](pics/rs.jpg)
+</center>
+<p>Nowadays, many of us interact with recommender systems on a daily basis. If you have an account in Amazon or Netflix or many similar online services, you may have recieved suggestions that often fit your interest. This can vary from a movie suggested by Netflix or very various products suggested by Amazon. The targeted advertisements on Facebook or tergeted pop-up advertisements in your browser are also other applications of recommender systems. Almost no two person recieves the exact same advertisements or suggestions on an online platforms. All these personalized suggestions and advertistments use recommender systems to find the best match for your interests according to your former ratings, purchases and/or clicks.</p>
+
+<p>In this report we want to solve a problem simmilar to what Netflix has. We assume that we have <em>n</em><sub><em>m</em></sub> movies and <em>n</em><sub><em>u</em></sub> users who rated a small subset of the movies. The goal is to figure out what kind of rating the users would give to the movies that they did not watch yet. The ultimate goal is to find out which user likes which movie the best, then we can suggest it to him/her. In other words we like to fill the cells with ? with reasonable numbers.</p>
+<center>
+![The partially rated matrix.](pics/Bild1.png)
+</center>
+<p>First, we talk brifely about content-based recommender systems and then a colloborative filtering method. Finally we implement a Collaborative filtering recommender system.</p>
+
+<h2 id="content-based-recommender-system">Content-based Recommender System</h2>
+
+<p>Imagine that we have two important features like <strong>drama</strong> and <strong>action</strong> for each movie. For example, we know that movie 1 is mostly drama and no action but movie 2 has a lot of action and no drama. Movie three has action and drama both and so on. We can show this information about each movie with a eature verctor for each movie. <em>x</em><sup>(<em>i</em>)</sup> is showing the feature weights fot the <em>i</em>-th movie. For example, $x^{(1)}=\begin{bmatrix}5\\ 0\end{bmatrix}$, $x^{(2)}=\begin{bmatrix}0\\ 4\end{bmatrix}$ and $x^{(3)}=\begin{bmatrix}2\\ 3\end{bmatrix}$. Assuming that the first element in <em>x</em><sup>(<em>i</em>)</sup> is the weight of drama feature and the second weight is the action feature.</p>
+
+<p>Each user has different interest in different types of movies some may only like drama and really dislike action, some may get really bored with drama and only go for action movies and some like me prefer movies which have drama and action both. This means that we can also define a feature vector <em>θ</em><sup>(<em>j</em>)</sup> for each user but we do not know the weights. It means we do not know what are the preferences of the <em>j</em>-th user more action or more drama? So we need to learn these weights. But how? with the help of their ratings. If we track the users rating we can see if he/she gave higher points to drama movies or action movie or movies which have both. Basically we want to finf the <em>θ</em><sup>(<em>j</em>)</sup> feature vector in a way that (<em>θ</em><sup>(<em>j</em>)</sup>)<sup><em>T</em></sup><em>x</em><sup>(<em>i</em>)</sup> is the similar to the rating of the <em>j</em>-th user for the <em>i</em>-th movie <em>y</em><sup>(<em>i</em>, <em>j</em>)</sup>. We want to this not only for one movie and one user but for all <em>n</em><sub><em>m</em></sub> movies and <em>n</em><sub><em>u</em></sub> movies. Therefore, we try to minimize the sum of the squared error for all rated movies.</p>
+
+<p>\begin{equation}
+min \frac{1}{2} \sum \limits_{i:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+where <em>r</em>(<em>i</em>, <em>j</em>)=1 is true if the user <em>i</em> rated the movie <em>j</em>. This means we summ over the rated ones and skip the holes of the matrix <strong>Y</strong>.</p>
+
+<h2 id="collaborative-filtering">Collaborative Filtering</h2>
+
+<p>Content-based recommendation is staright forward and easy to implement but it requires us knowing the features of all movies. This is often not possible. Since there are much more important features than the two we have mentioned before. Furthermore, there is no easy way to find the right weights for a large pool of movies. Therefore, in a real-world applcaition we often cannot perform a content-based recommendation.</p>
+
+<p>Let’s assume that there are <em>n</em><sub><em>f</em></sub> important features (wihtout knowing what these features are). If we have asked all the users to give some weights for these features and we could fill the <strong>Θ</strong> matrix which is a <em>n</em><sub><em>u</em></sub> x <em>n</em><sub><em>f</em></sub> matrix then we could find the weight matrix of the movies : <strong>X</strong></p>
+
+<p>\begin{equation}\mathbf{\Theta}=\begin{bmatrix}-(\theta^{(1)})^T-\ -(\theta^{(2)})^T- \ \vdots \-(\theta^{(n_u)})^T- \end{bmatrix}\end{equation}
+\begin{equation}\mathbf{X}=\begin{bmatrix}-(x^{(1)})^T-\ -(x^{(2)})^T- \ \vdots \-(x^{(n_m)})^T- \end{bmatrix}\end{equation}
+by minimzing the following optimization problem:</p>
+
+<p>\begin{equation}
+\min\limits_{x^{(i)}} \frac{1}{2} \sum \limits_{j:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+Now that we have <strong>X</strong>, we can find <strong>Θ</strong> by solving the following optimization problem:</p>
+
+<p>\begin{equation}
+\min \limits_{\theta^{(i)}} \frac{1}{2} \sum \limits_{i:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+This means that we can start with some random feature matrices <strong>Θ</strong> and <strong>X</strong> and iteratively improve them.
+\begin{equation}\mathbf{\Theta}-&gt;\mathbf{X}-&gt;\mathbf{\Theta}-&gt;\mathbf{X} -&gt; \cdots \end{equation}
+Or we can minimize the following function at once:</p>
+
+<p>\begin{equation}J(\mathbf{\Theta},\mathbf{X})=\frac{1}{2} \sum\limits_{(i,j):r(i,j)=1} ((\theta^{(j)})^T x^{(j)}-y^{(i,j)})^2\end{equation}
+Programming a Simple Recommender System
+=======================================</p>
+
+<p>As always we start with loading the data. We use a dataset constaining 943 users and 1682 movies. Since the dataset in provided in mat format we first load the R.matlab library</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="s1">'R.matlab'</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## R.matlab v3.6.1 (2016-10-19) successfully loaded. See ?R.matlab for help.
+
+## 
+## Attaching package: 'R.matlab'
+
+## The following objects are masked from 'package:base':
+## 
+##     getOption, isOpen
+</code></pre></div></div>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">matlist</span><span class="o">&lt;-</span><span class="n">readMat</span><span class="p">(</span><span class="s2">"ex8_movies.mat"</span><span class="p">)</span><span class="w">
+</span><span class="n">myR</span><span class="o">&lt;-</span><span class="n">matlist</span><span class="o">$</span><span class="n">R</span><span class="w">
+</span><span class="n">myY</span><span class="o">&lt;-</span><span class="n">matlist</span><span class="o">$</span><span class="n">Y</span><span class="w">
+</span><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"myR is a matrix of size %ix%i"</span><span class="p">,</span><span class="nf">dim</span><span class="p">(</span><span class="n">myR</span><span class="p">)[</span><span class="m">1</span><span class="p">],</span><span class="nf">dim</span><span class="p">(</span><span class="n">myR</span><span class="p">)[</span><span class="m">2</span><span class="p">]))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "myR is a matrix of size 1682x943"
+</code></pre></div></div>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"myY is a matrix of size %ix%i"</span><span class="p">,</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">1</span><span class="p">],</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">2</span><span class="p">]))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "myY is a matrix of size 1682x943"
+</code></pre></div></div>
+
+<p>The data is provided in the form of two matrices of size 1682 x 943, movie-user matrices . Matrix myR contains only 0 and 1. <em>m<strong>y</strong>R</em><sub><em>i<strong>j*&lt;/sub&gt; is zero when the *i*-th movie is not rated by the *j*-th user. Matrix myY contains the ratings. So *m</strong>y<strong>Y*<sub>*i**j*</sub> is the rating of the *j*-th user for the *i*-th movie. If *m</strong>y**Y</em><sub><em>i**j</em></sub> = 0, it means that the <em>j</em>-th user did not provide any rating for the <em>i</em>-th movie</sub></p>
+
+<p>Let’s take a look at the rating distribution</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Countsy</span><span class="o">&lt;-</span><span class="n">sapply</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="o">:</span><span class="m">5</span><span class="p">),</span><span class="n">FUN</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="nf">length</span><span class="p">(</span><span class="n">which</span><span class="p">(</span><span class="n">myY</span><span class="o">==</span><span class="n">i</span><span class="p">)))</span><span class="w">
+</span><span class="n">countFrame</span><span class="o">&lt;-</span><span class="n">data.frame</span><span class="p">(</span><span class="n">rating</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="o">:</span><span class="m">5</span><span class="p">),</span><span class="n">count</span><span class="o">=</span><span class="n">Countsy</span><span class="p">)</span><span class="w">
+</span><span class="n">mp</span><span class="o">&lt;-</span><span class="n">barplot</span><span class="p">(</span><span class="n">countFrame</span><span class="o">$</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">xlab</span><span class="o">=</span><span class="s2">"rating"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"counts"</span><span class="p">,</span><span class="n">log</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span><span class="w">
+</span><span class="n">axis</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">at</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">countFrame</span><span class="o">$</span><span class="n">rating</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="RS-movien_files/figure-markdown_github/unnamed-chunk-2-1.png" alt="" /></p>
+
+<p>What percentage of the movies are rated by each user?</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">RM</span><span class="o">&lt;-</span><span class="n">apply</span><span class="p">(</span><span class="n">myR</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="n">FUN</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w">
+</span><span class="n">boxplot</span><span class="p">(</span><span class="n">RM</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"% rated movies"</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="RS-movien_files/figure-markdown_github/unnamed-chunk-3-1.png" alt="" /> We can see that most of the users rated less than 10 percent of the movies, although there are very few users who rated up to 40 percent of the movies.</p>
+
+<h3 id="averaged-user-rating-and-the-best-movies">Averaged user-rating and the best movies</h3>
+
+<p>First we calculate the average rating for each movie and take a look at the summary.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tempY</span><span class="o">&lt;-</span><span class="n">myY</span><span class="w">
+</span><span class="n">tempY</span><span class="p">[</span><span class="n">tempY</span><span class="o">==</span><span class="m">0</span><span class="p">]</span><span class="o">&lt;-</span><span class="kc">NA</span><span class="w">
+</span><span class="n">avg.rate</span><span class="o">&lt;-</span><span class="n">apply</span><span class="p">(</span><span class="n">tempY</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">mean</span><span class="p">,</span><span class="n">na.rm</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
+</span><span class="n">sortedFrame</span><span class="o">&lt;-</span><span class="n">data.frame</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="nf">length</span><span class="p">(</span><span class="n">avg.rate</span><span class="p">)),</span><span class="n">rating</span><span class="o">=</span><span class="n">avg.rate</span><span class="p">)</span><span class="w">
+</span><span class="n">summary</span><span class="p">(</span><span class="n">sortedFrame</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##        id             rating     
+##  Min.   :   1.0   Min.   :1.000  
+##  1st Qu.: 421.2   1st Qu.:2.660  
+##  Median : 841.5   Median :3.162  
+##  Mean   : 841.5   Mean   :3.076  
+##  3rd Qu.:1261.8   3rd Qu.:3.653  
+##  Max.   :1682.0   Max.   :5.000
+</code></pre></div></div>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#head(sortedFrame)</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="visualising-the-movie-user-rating-matrix">Visualising the movie-user rating matrix</h2>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">lattice</span><span class="p">)</span><span class="w">
+</span><span class="n">levelplot</span><span class="p">(</span><span class="n">myY</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"movie"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"user"</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="RS-movien_files/figure-markdown_github/unnamed-chunk-5-1.png" alt="" /></p>
+
+<p>Then we merge the information to the list of movies and take a fast look at the best movies.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">movienames</span><span class="o">&lt;-</span><span class="n">read.table</span><span class="p">(</span><span class="s2">"movieID.txt"</span><span class="p">)</span><span class="w"> 
+</span><span class="c1">#movienames&lt;-apply(movienames,1,FUN=function(x)gsub('[[:digit:]]+', '', x))</span><span class="w">
+</span><span class="n">sortedFrame</span><span class="o">&lt;-</span><span class="n">cbind</span><span class="p">(</span><span class="n">sortedFrame</span><span class="p">,</span><span class="n">movienames</span><span class="p">)</span><span class="w">
+</span><span class="n">sortedFrame</span><span class="o">&lt;-</span><span class="n">sortedFrame</span><span class="p">[</span><span class="n">order</span><span class="p">(</span><span class="o">-</span><span class="n">sortedFrame</span><span class="o">$</span><span class="n">rating</span><span class="p">),]</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">sortedFrame</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##        id rating                                       V1
+## 814   814      5              814GreatDayinHarlem,A(1994)
+## 1122 1122      5            1122TheyMadeMeaCriminal(1939)
+## 1189 1189      5                    1189Prefontaine(1997)
+## 1201 1201      5 1201MarleneDietrich:ShadowandLight(1996)
+## 1293 1293      5                        1293StarKid(1997)
+## 1467 1467      5      1467SaintofFortWashington,The(1993)
+</code></pre></div></div>
+
+<p>The worst ranked movies</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tail</span><span class="p">(</span><span class="n">sortedFrame</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##        id rating                                       V1
+## 1626 1626      1 1626NobodyLovesMe(Keinerliebtmich)(1994)
+## 1654 1654      1             1654ChairmanoftheBoard(1998)
+## 1659 1659      1          1659GettingAwayWithMurder(1996)
+## 1661 1661      1                     1661NewAge,The(1994)
+## 1671 1671      1               1671FurtherGesture,A(1996)
+## 1678 1678      1                       1678Mat'isyn(1997)
+</code></pre></div></div>
+
+<h1 id="adding-my-own-ranking-and-normalizing">Adding my own ranking and normalizing</h1>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">moviesIWatched</span><span class="o">&lt;-</span><span class="nf">c</span><span class="p">(</span><span class="s2">"Titanic"</span><span class="p">,</span><span class="s2">"ToyStory"</span><span class="p">,</span><span class="s2">"TaxiDriver"</span><span class="p">,</span><span class="s2">"HomeAlone1"</span><span class="p">,</span><span class="s2">"HomeAlone3"</span><span class="p">,</span><span class="s2">"unknown"</span><span class="p">,</span><span class="s2">"Schindler'sList"</span><span class="p">,</span><span class="s2">"SilenceoftheLambs"</span><span class="p">,</span><span class="s2">"UsualSuspects"</span><span class="p">,</span><span class="s2">"Terminator1"</span><span class="p">,</span><span class="s2">"Terminator2"</span><span class="p">,</span><span class="s2">"Shining"</span><span class="p">,</span><span class="s2">"Crash"</span><span class="p">)</span><span class="w">
+</span><span class="n">myRating</span><span class="o">&lt;-</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span><span class="w">
+</span><span class="n">index</span><span class="o">&lt;-</span><span class="n">unlist</span><span class="p">(</span><span class="n">sapply</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="nf">length</span><span class="p">(</span><span class="n">moviesIWatched</span><span class="p">)),</span><span class="n">FUN</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">){</span><span class="n">grep</span><span class="p">(</span><span class="n">moviesIWatched</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">movienames</span><span class="p">[,</span><span class="m">1</span><span class="p">])}))</span><span class="w">
+</span><span class="n">newR</span><span class="o">&lt;-</span><span class="n">newY</span><span class="o">&lt;-</span><span class="nf">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">1</span><span class="p">])</span><span class="w">
+</span><span class="n">newR</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">&lt;</span><span class="m">-1</span><span class="w">
+</span><span class="n">newY</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">&lt;-</span><span class="n">myRating</span><span class="w">
+
+</span><span class="n">myY</span><span class="o">&lt;-</span><span class="n">cbind</span><span class="p">(</span><span class="n">myY</span><span class="p">,</span><span class="n">newY</span><span class="p">)</span><span class="w">
+</span><span class="n">myR</span><span class="o">&lt;-</span><span class="n">cbind</span><span class="p">(</span><span class="n">myR</span><span class="p">,</span><span class="n">newR</span><span class="p">)</span><span class="w">
+
+</span><span class="n">tempY</span><span class="o">&lt;-</span><span class="n">myY</span><span class="w">
+</span><span class="n">tempY</span><span class="p">[</span><span class="n">tempY</span><span class="o">==</span><span class="m">0</span><span class="p">]</span><span class="o">&lt;-</span><span class="kc">NA</span><span class="w">
+</span><span class="n">avg.rate</span><span class="o">&lt;-</span><span class="n">apply</span><span class="p">(</span><span class="n">tempY</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">mean</span><span class="p">,</span><span class="n">na.rm</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
+
+</span><span class="n">myY</span><span class="o">&lt;-</span><span class="n">myY</span><span class="o">-</span><span class="n">replicate</span><span class="p">(</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">2</span><span class="p">],</span><span class="n">avg.rate</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<h1 id="collaborative-filtering-1">Collaborative Filtering</h1>
+
+<p>Now we start to build our recommender system.</p>
+
+<p>There are three main phases for the collaborative filtering algorithm.</p>
+
+<ol>
+  <li>Initializing the <strong>Θ</strong> and <strong>X</strong> with random small numbers</li>
+  <li>Minimize the cost function $J(\mathbf{\Theta},\mathbf{X})=\frac{1}{2} \sum ((\theta^{(j)})^T x^{(j)}-y^{(i,j)})^2+\frac{\lambda}{2}\sum_{i=1}^{n_m}\sum_{k=1}^{n}(x_k^{(i)})^2+\frac{\lambda}{2}\sum_{j=1}^{n_u}\sum_{k=1}^{n}(\theta_k^{(i)})^2$</li>
+  <li>Predict</li>
+</ol>
+
+<h3 id="definign-some-parameters">definign some parameters</h3>
+
+<ul>
+  <li><em>n</em><sub><em>u</em></sub>: number of users</li>
+  <li><em>n</em><sub><em>m</em></sub>: number of movies</li>
+  <li><em>n</em><sub><em>f</em></sub>: number of features, this parameter can be tuned</li>
+</ul>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nm</span><span class="o">&lt;-</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w">
+</span><span class="n">nu</span><span class="o">&lt;-</span><span class="nf">dim</span><span class="p">(</span><span class="n">myY</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="w">
+</span><span class="n">nf</span><span class="o">&lt;</span><span class="m">-100</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="defining-the-cost-function-jΘx">Defining the Cost Function <em>J</em>(<strong>Θ</strong>, <strong>X</strong>)</h2>
+
+<p>First we define two helper functions:</p>
+
+<ul>
+  <li>flatter: a function which flattens the <strong>Θ</strong> and <strong>X</strong> matrices and gives a vector as output</li>
+  <li>rev.flatter: a function which transforms the vectorized form of the parameters to two matrices of <strong>Θ</strong> and <strong>X</strong></li>
+</ul>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">flatter</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">){</span><span class="w">
+  </span><span class="n">param</span><span class="o">&lt;-</span><span class="nf">c</span><span class="p">(</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)),</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="n">rev.flatter</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">param</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="p">){</span><span class="w">
+  </span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">param</span><span class="p">[</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="p">(</span><span class="n">nf</span><span class="o">*</span><span class="n">nu</span><span class="p">))]</span><span class="w">
+  </span><span class="n">X</span><span class="o">&lt;-</span><span class="n">param</span><span class="p">[</span><span class="nf">c</span><span class="p">((</span><span class="n">nf</span><span class="o">*</span><span class="n">nu</span><span class="m">+1</span><span class="p">)</span><span class="o">:</span><span class="p">(</span><span class="n">nf</span><span class="o">*</span><span class="n">nu</span><span class="o">+</span><span class="n">nf</span><span class="o">*</span><span class="n">nm</span><span class="p">))]</span><span class="w">
+  </span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">matrix</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">nrow</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span><span class="n">byrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">T</span><span class="p">)</span><span class="w">
+  </span><span class="n">X</span><span class="o">&lt;-</span><span class="n">matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">nrow</span><span class="o">=</span><span class="n">nm</span><span class="p">,</span><span class="n">byrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">T</span><span class="p">)</span><span class="w">
+  </span><span class="n">output</span><span class="o">&lt;-</span><span class="nf">list</span><span class="p">(</span><span class="n">Theta</span><span class="o">=</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Then, we define the cost function.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cost</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
+      </span><span class="n">myY</span><span class="p">[</span><span class="n">myR</span><span class="o">==</span><span class="m">0</span><span class="p">]</span><span class="o">&lt;-</span><span class="kc">NA</span><span class="w">
+      </span><span class="n">output</span><span class="o">&lt;-</span><span class="nf">sum</span><span class="p">((</span><span class="n">X</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span><span class="o">-</span><span class="n">myY</span><span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="p">,</span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="o">*</span><span class="m">0.5</span><span class="o">+</span><span class="nf">sum</span><span class="p">(</span><span class="n">Theta</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">*</span><span class="m">0.5</span><span class="o">*</span><span class="n">lambda</span><span class="o">+</span><span class="nf">sum</span><span class="p">(</span><span class="n">X</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">*</span><span class="m">0.5</span><span class="o">*</span><span class="n">lambda</span><span class="w">
+      </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">costFunc</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
+  </span><span class="c1">#Theta&lt;-x[c(1:(nf*nu))]</span><span class="w">
+  </span><span class="c1">#X&lt;-x[c((nf*nu+1):(nf*nu+nf*nm))]</span><span class="w">
+  </span><span class="c1">#Theta&lt;-matrix(Theta,ncol=nf,nrow=nu,byrow = T)</span><span class="w">
+  </span><span class="c1">#X&lt;-matrix(X,ncol=nf,nrow=nm,byrow = T)</span><span class="w">
+  </span><span class="n">params</span><span class="o">&lt;-</span><span class="n">rev.flatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="o">=</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">)</span><span class="w">
+  </span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">Theta</span><span class="w">
+  </span><span class="n">X</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">X</span><span class="w">
+  </span><span class="n">output</span><span class="o">&lt;-</span><span class="n">cost</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">)</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="defining-the-gradient-functions">Defining The Gradient Functions</h2>
+
+<p>The gradients which we need:</p>
+
+<ul>
+  <li>$\frac{\partial J}{\partial x_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})\theta^{(j)}_k$</li>
+  <li>$\frac{\partial J}{\partial \theta_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})x^{(i)}_k$</li>
+</ul>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gradF</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
+   </span><span class="n">TG</span><span class="o">&lt;-</span><span class="n">t</span><span class="p">((</span><span class="n">X</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span><span class="o">-</span><span class="n">myY</span><span class="p">)</span><span class="o">*</span><span class="n">myR</span><span class="p">)</span><span class="o">%*%</span><span class="n">X</span><span class="o">+</span><span class="n">lambda</span><span class="o">*</span><span class="n">Theta</span><span class="w">
+   </span><span class="n">XG</span><span class="o">&lt;-</span><span class="p">((</span><span class="n">X</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span><span class="o">-</span><span class="n">myY</span><span class="p">)</span><span class="o">*</span><span class="n">myR</span><span class="p">)</span><span class="o">%*%</span><span class="n">Theta</span><span class="o">+</span><span class="n">lambda</span><span class="o">*</span><span class="n">X</span><span class="w">
+   </span><span class="n">grad</span><span class="o">&lt;-</span><span class="nf">c</span><span class="p">(</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">TG</span><span class="p">)),</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">XG</span><span class="p">)))</span><span class="w">
+   </span><span class="nf">return</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="n">gradFunc</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
+  </span><span class="c1"># Theta&lt;-x[c(1:(nf*nu))]</span><span class="w">
+  </span><span class="c1"># X&lt;-x[c((nf*nu+1):(nf*nu+nf*nm))]</span><span class="w">
+  </span><span class="c1"># Theta&lt;-matrix(Theta,ncol=nf,nrow=nu,byrow = T)</span><span class="w">
+  </span><span class="c1"># X&lt;-matrix(X,ncol=nf,nrow=nm,byrow = T)</span><span class="w">
+  </span><span class="n">params</span><span class="o">&lt;-</span><span class="n">rev.flatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="o">=</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">)</span><span class="w">
+  </span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">Theta</span><span class="w">
+  </span><span class="n">X</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">X</span><span class="w">
+  </span><span class="n">mgrad</span><span class="o">&lt;-</span><span class="n">gradF</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">)</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">mgrad</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="n">mygradFunc</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
+  </span><span class="n">output</span><span class="o">&lt;-</span><span class="n">gradFunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">myY</span><span class="o">=</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="o">=</span><span class="n">myR</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="o">=</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">)</span><span class="w">
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="initialising-the-parameters-Θ-and-x">Initialising the parameters <strong>Θ</strong> and <strong>X</strong></h3>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">initParam</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">nf</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="p">){</span><span class="w">
+           </span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">matrix</span><span class="p">(</span><span class="n">runif</span><span class="p">(</span><span class="n">nu</span><span class="o">*</span><span class="n">nf</span><span class="p">,</span><span class="n">min</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">max</span><span class="o">=</span><span class="m">0.05</span><span class="p">),</span><span class="n">ncol</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">nrow</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span><span class="w">  
+           </span><span class="n">X</span><span class="o">&lt;-</span><span class="n">matrix</span><span class="p">(</span><span class="n">runif</span><span class="p">(</span><span class="n">nm</span><span class="o">*</span><span class="n">nf</span><span class="p">,</span><span class="n">min</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">max</span><span class="o">=</span><span class="m">0.05</span><span class="p">),</span><span class="n">ncol</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">nrow</span><span class="o">=</span><span class="n">nm</span><span class="p">)</span><span class="w">  
+           </span><span class="n">params</span><span class="o">&lt;-</span><span class="nf">list</span><span class="p">(</span><span class="n">Theta</span><span class="o">=</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span><span class="w">
+           </span><span class="nf">return</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Let’s test the functions that we have until now</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># params&lt;-initParam(nf,nu,nm)</span><span class="w">
+</span><span class="c1"># iCost&lt;-cost(Theta=params$Theta,X=params$X,myY,lambda=0)</span><span class="w">
+</span><span class="c1"># print(iCost)</span><span class="w">
+</span><span class="c1"># iTheta&lt;-as.vector(t(params$Theta))</span><span class="w">
+</span><span class="c1"># iX&lt;-as.vector(t(params$X))</span><span class="w">
+</span><span class="c1"># iCost&lt;-costFunc(x=c(iTheta,iX))</span><span class="w">
+</span><span class="c1"># print(iCost)</span><span class="w">
+</span><span class="c1"># igrad&lt;-mygradFunc(x=c(iTheta,iX))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Now we try to minimize the cost function by using a conjugate gradient optimizer</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TRAIN_RS</span><span class="o">&lt;-</span><span class="nb">F</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"Rcgmin"</span><span class="p">)</span><span class="w">
+</span><span class="n">params</span><span class="o">&lt;-</span><span class="n">initParam</span><span class="p">(</span><span class="n">nf</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="p">)</span><span class="w">
+</span><span class="n">startP</span><span class="o">&lt;-</span><span class="n">flatter</span><span class="p">(</span><span class="n">params</span><span class="o">$</span><span class="n">Theta</span><span class="p">,</span><span class="n">params</span><span class="o">$</span><span class="n">X</span><span class="p">)</span><span class="w">
+</span><span class="n">iCost</span><span class="o">&lt;-</span><span class="n">costFunc</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">startP</span><span class="p">)</span><span class="w">
+</span><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"The cost function after random initilization is %f"</span><span class="p">,</span><span class="n">iCost</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after random initilization is 50216.852398"
+</code></pre></div></div>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="n">TRAIN_RS</span><span class="p">){</span><span class="w">
+  </span><span class="n">optres</span><span class="o">&lt;-</span><span class="n">Rcgmin</span><span class="p">(</span><span class="n">par</span><span class="o">=</span><span class="n">startP</span><span class="p">,</span><span class="n">fn</span><span class="o">=</span><span class="n">costFunc</span><span class="p">,</span><span class="n">gr</span><span class="o">=</span><span class="n">mygradFunc</span><span class="p">)</span><span class="w">
+  </span><span class="n">save</span><span class="p">(</span><span class="n">optres</span><span class="p">,</span><span class="n">file</span><span class="o">=</span><span class="s2">"optresV1.RData"</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="k">else</span><span class="p">{</span><span class="w">
+  </span><span class="n">load</span><span class="p">(</span><span class="s2">"optresV1.RData"</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"The cost function after optimization is %f"</span><span class="p">,</span><span class="n">optres</span><span class="o">$</span><span class="n">value</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after optimization is 0.029951"
+</code></pre></div></div>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">solution</span><span class="o">&lt;-</span><span class="n">optres</span><span class="o">$</span><span class="n">par</span><span class="w">
+</span><span class="n">params</span><span class="o">&lt;-</span><span class="n">rev.flatter</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span><span class="n">nm</span><span class="o">=</span><span class="n">nm</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">)</span><span class="w">
+</span><span class="n">X</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">X</span><span class="w">
+</span><span class="n">Theta</span><span class="o">&lt;-</span><span class="n">params</span><span class="o">$</span><span class="n">Theta</span><span class="w">
+</span><span class="n">RATING</span><span class="o">&lt;-</span><span class="n">X</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span><span class="o">+</span><span class="n">replicate</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span><span class="n">avg.rate</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<h1 id="visualising-the-rating">Visualising The Rating</h1>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">levelplot</span><span class="p">(</span><span class="n">RATING</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"movies"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"users"</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="RS-movien_files/figure-markdown_github/unnamed-chunk-17-1.png" alt="" /> #Which Movies Should I Watch?</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MYRES</span><span class="o">&lt;-</span><span class="n">data.frame</span><span class="p">(</span><span class="n">rating</span><span class="o">=</span><span class="n">RATING</span><span class="p">[,</span><span class="n">ncol</span><span class="p">(</span><span class="n">RATING</span><span class="p">)],</span><span class="n">movienames</span><span class="p">)</span><span class="w">
+</span><span class="n">MYRES</span><span class="o">&lt;-</span><span class="n">MYRES</span><span class="p">[</span><span class="n">order</span><span class="p">(</span><span class="o">-</span><span class="n">MYRES</span><span class="o">$</span><span class="n">rating</span><span class="p">),]</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">MYRES</span><span class="p">,</span><span class="m">20</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##        rating                                       V1
+## 91   5.849487     91NightmareBeforeChristmas,The(1993)
+## 136  5.738668        136Mr.SmithGoestoWashington(1939)
+## 169  5.593341               169WrongTrousers,The(1993)
+## 189  5.586692                   189GrandDayOut,A(1992)
+## 515  5.530870                        515Boot,Das(1981)
+## 57   5.483312                           57Priest(1994)
+## 513  5.437003                    513ThirdMan,The(1949)
+## 250  5.376603                250FifthElement,The(1997)
+## 242  5.370989                           242Kolya(1996)
+## 154  5.365623        154MontyPython'sLifeofBrian(1979)
+## 52   5.328217          52MadnessofKingGeorge,The(1994)
+## 922  5.326278                         922DeadMan(1995)
+## 529  5.319289    529MyLifeasaDog(Mittlivsomhund)(1985)
+## 262  5.269165               262IntheCompanyofMen(1997)
+## 1062 5.197286            1062FourDaysinSeptember(1997)
+## 61   5.194506                61ThreeColors:White(1994)
+## 199  5.183842        199BridgeontheRiverKwai,The(1957)
+## 477  5.103309                         477Matilda(1996)
+## 83   5.089488              83MuchAdoAboutNothing(1993)
+## 1201 5.087271 1201MarleneDietrich:ShadowandLight(1996)
+</code></pre></div></div>
+
+<p>Which movies are ranked as the worst in average?</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">avg.predict</span><span class="o">&lt;-</span><span class="n">apply</span><span class="p">(</span><span class="n">RATING</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">mean</span><span class="p">)</span><span class="w">
+</span><span class="n">ARES</span><span class="o">&lt;-</span><span class="n">data.frame</span><span class="p">(</span><span class="n">rating</span><span class="o">=</span><span class="n">RATING</span><span class="p">[,</span><span class="n">ncol</span><span class="p">(</span><span class="n">RATING</span><span class="p">)],</span><span class="n">movienames</span><span class="p">)</span><span class="w">
+</span><span class="n">ARES</span><span class="o">&lt;-</span><span class="n">ARES</span><span class="p">[</span><span class="n">order</span><span class="p">(</span><span class="n">ARES</span><span class="o">$</span><span class="n">rating</span><span class="p">),]</span><span class="w">
+</span><span class="n">head</span><span class="p">(</span><span class="n">ARES</span><span class="p">,</span><span class="m">20</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##         rating                                             V1
+## 1359 0.5269795                         1359BoysinVenice(1996)
+## 1334 0.5594010                       1334SomebodytoLove(1994)
+## 457  0.6968974                  457FreeWilly3:TheRescue(1997)
+## 139  0.7700111                           139LoveBug,The(1969)
+## 1486 0.8070273                    1486GirlintheCadillac(1995)
+## 1661 0.8130145                           1661NewAge,The(1994)
+## 1654 0.8239132                   1654ChairmanoftheBoard(1998)
+## 1618 0.8242673                        1618KingofNewYork(1990)
+## 1309 0.8247147                   1309VeryNaturalThing,A(1974)
+## 67   0.8259924                67AceVentura:PetDetective(1994)
+## 1626 0.8289817       1626NobodyLovesMe(Keinerliebtmich)(1994)
+## 1493 0.8314372                       1493ModernAffair,A(1995)
+## 1671 0.8447306                     1671FurtherGesture,A(1996)
+## 1494 0.8482470                            1494Mostro,Il(1994)
+## 575  0.8639046 575CitySlickersII:TheLegendofCurly'sGold(1994)
+## 247  0.8775103              247Turbo:APowerRangersMovie(1997)
+## 1678 0.8911964                             1678Mat'isyn(1997)
+## 852  0.9236600                       852BloodyChild,The(1996)
+## 1659 0.9681306                1659GettingAwayWithMurder(1996)
+## 1601 0.9700381                         1601OfficeKiller(1997)
+</code></pre></div></div>
