@@ -14,13 +14,14 @@
     <meta content="article" property="og:type">
   
   
-    <meta content="..." property="og:description">
+    <meta content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+" property="og:description">
   
   
     <meta content="http://139.6.66.22:4000/recommender-systems/" property="og:url">
   
   
-    <meta content="2017-09-11T23:00:00+02:00" property="article:published_time">
+    <meta content="2018-04-26T23:00:00+02:00" property="article:published_time">
     <meta content="http://139.6.66.22:4000/about/" property="article:author">
   
   
@@ -31,11 +32,9 @@
   
   
     
+    <meta content="Productivity" property="article:tag">
+    
     <meta content="Software" property="article:tag">
-    
-    <meta content="R-Blogger" property="article:tag">
-    
-    <meta content="CI" property="article:tag">
     
   
 
@@ -49,13 +48,14 @@
     <meta name="twitter:url" content="http://139.6.66.22:4000/recommender-systems/">
   
   
-    <meta name="twitter:description" content="...">
+    <meta name="twitter:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
   
   
     <meta name="twitter:image:src" content="http://139.6.66.22:4000/assets/img/minion.jpg">
   
 
-	<meta name="description" content="...">
+	<meta name="description" content="">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta property="og:image" content="">
@@ -76,8 +76,14 @@
 	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
 	<!-- Styles -->
 	<link rel="stylesheet" href="/assets/css/main.css">
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>
+        <script type="text/x-mathjax-config">
+              MathJax.Hub.Config({
+              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+               });
+        </script>
+        <script type="text/javascript" async src="path-to-mathjax/MathJax.js?config=TeX-AMS_CHTML"></script>
 </head>
 
 <body>
@@ -130,30 +136,26 @@
     <div class="wrap-content">
       <header class="header-page">
         <h1 class="page-title">A Simple Recommender System</h1>
-        <div class="page-date"><span>2017, Sep 11&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div class="page-date"><span>2018, Apr 26&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
       </header>
       <h1 id="what-is-a-recommender-system">What is a Recommender System?</h1>
 
-<center>
-![Caption for the picture.](pics/rs.jpg)
-</center>
 <p>Nowadays, many of us interact with recommender systems on a daily basis. If you have an account in Amazon or Netflix or many similar online services, you may have recieved suggestions that often fit your interest. This can vary from a movie suggested by Netflix or very various products suggested by Amazon. The targeted advertisements on Facebook or tergeted pop-up advertisements in your browser are also other applications of recommender systems. Almost no two person recieves the exact same advertisements or suggestions on an online platforms. All these personalized suggestions and advertistments use recommender systems to find the best match for your interests according to your former ratings, purchases and/or clicks.</p>
 
 <p>In this report we want to solve a problem simmilar to what Netflix has. We assume that we have <em>n</em><sub><em>m</em></sub> movies and <em>n</em><sub><em>u</em></sub> users who rated a small subset of the movies. The goal is to figure out what kind of rating the users would give to the movies that they did not watch yet. The ultimate goal is to find out which user likes which movie the best, then we can suggest it to him/her. In other words we like to fill the cells with ? with reasonable numbers.</p>
-<center>
-![The partially rated matrix.](pics/Bild1.png)
-</center>
+
 <p>First, we talk brifely about content-based recommender systems and then a colloborative filtering method. Finally we implement a Collaborative filtering recommender system.</p>
 
 <h2 id="content-based-recommender-system">Content-based Recommender System</h2>
 
-<p>Imagine that we have two important features like <strong>drama</strong> and <strong>action</strong> for each movie. For example, we know that movie 1 is mostly drama and no action but movie 2 has a lot of action and no drama. Movie three has action and drama both and so on. We can show this information about each movie with a eature verctor for each movie. <em>x</em><sup>(<em>i</em>)</sup> is showing the feature weights fot the <em>i</em>-th movie. For example, $x^{(1)}=\begin{bmatrix}5\\0\end{bmatrix}$, $x^{(2)}=\begin{bmatrix}0\\4\end{bmatrix}$ and $x^{(3)}=\begin{bmatrix}2\\3\end{bmatrix}$. Assuming that the first element in <em>x</em><sup>(<em>i</em>)</sup> is the weight of drama feature and the second weight is the action feature.</p>
+<p>Imagine that we have two important features like <strong>drama</strong> and <strong>action</strong> for each movie. For example, we know that movie 1 is mostly drama and no action but movie 2 has a lot of action and no drama. Movie three has action and drama both and so on. We can show this information about each movie with a eature verctor for each movie. <em>x</em><sup>(<em>i</em>)</sup> is showing the feature weights fot the <em>i</em>-th movie. For example: $x^{(1)}=\begin{bmatrix}5\\ 0\end{bmatrix}$, $\begin{equation*}x^{(2)}=\begin{bmatrix}0\\ 4\end{bmatrix}\end{equation*}$ and $x^{(3)}=\begin{bmatrix}2\\ 3\end{bmatrix}$. Assuming that the first element in <em>x</em><sup>(<em>i</em>)</sup> is the weight of drama feature and the second weight is the action feature.</p>
 
 <p>Each user has different interest in different types of movies some may only like drama and really dislike action, some may get really bored with drama and only go for action movies and some like me prefer movies which have drama and action both. This means that we can also define a feature vector <em>θ</em><sup>(<em>j</em>)</sup> for each user but we do not know the weights. It means we do not know what are the preferences of the <em>j</em>-th user more action or more drama? So we need to learn these weights. But how? with the help of their ratings. If we track the users rating we can see if he/she gave higher points to drama movies or action movie or movies which have both. Basically we want to finf the <em>θ</em><sup>(<em>j</em>)</sup> feature vector in a way that (<em>θ</em><sup>(<em>j</em>)</sup>)<sup><em>T</em></sup><em>x</em><sup>(<em>i</em>)</sup> is the similar to the rating of the <em>j</em>-th user for the <em>i</em>-th movie <em>y</em><sup>(<em>i</em>, <em>j</em>)</sup>. We want to this not only for one movie and one user but for all <em>n</em><sub><em>m</em></sub> movies and <em>n</em><sub><em>u</em></sub> movies. Therefore, we try to minimize the sum of the squared error for all rated movies.</p>
 
-<script type="math/tex; mode=display">min \\frac{1}{2} \\sum \\limits\_{i:r(i,j)=1} ((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2</script>
-
-<p>where <em>r</em>(<em>i</em>, <em>j</em>)=1 is true if the user <em>i</em> rated the movie <em>j</em>. This means we summ over the rated ones and skip the holes of the matrix <strong>Y</strong>.</p>
+<p>\begin{equation}
+min \frac{1}{2} \sum \limits_{i:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+where <em>r</em>(<em>i</em>, <em>j</em>)=1 is true if the user <em>i</em> rated the movie <em>j</em>. This means we summ over the rated ones and skip the holes of the matrix <strong>Y</strong>.</p>
 
 <h2 id="collaborative-filtering">Collaborative Filtering</h2>
 
@@ -161,26 +163,27 @@
 
 <p>Let’s assume that there are <em>n</em><sub><em>f</em></sub> important features (wihtout knowing what these features are). If we have asked all the users to give some weights for these features and we could fill the <strong>Θ</strong> matrix which is a <em>n</em><sub><em>u</em></sub> x <em>n</em><sub><em>f</em></sub> matrix then we could find the weight matrix of the movies : <strong>X</strong></p>
 
-<script type="math/tex; mode=display">\\mathbf{\\Theta}=\\begin{bmatrix}-(\\theta^{(1)})^T-\\\\-(\\theta^{(2)})^T-\\\\\\vdots\\\\-(\\theta^{(n\_u)})^T-\\end{bmatrix}</script>
+<p>\begin{equation}\mathbf{\Theta}=\begin{bmatrix}-(\theta^{(1)})^T-\\ -(\theta^{(2)})^T- \\ \vdots \\ - (\theta^{(n_u)})^T-\end{bmatrix}\end{equation}</p>
 
-<script type="math/tex; mode=display">\\mathbf{X}=\\begin{bmatrix}-(x^{(1)})^T-\\\\-(x^{(2)})^T-\\\\\\vdots\\\\-(x^{(n\_m)})^T-\\end{bmatrix}</script>
+<p>\begin{equation}\mathbf{X}=\begin{bmatrix} -(x^{(1)})^T- \\ - (x^{(2)})^T - \\ \vdots \\ -(x^{(n_m)})^T - \end{bmatrix}\end{equation}</p>
 
 <p>by minimzing the following optimization problem:</p>
 
-<script type="math/tex; mode=display">\\min\\limits\_{x^{(i)}} \\frac{1}{2} \\sum \\limits\_{j:r(i,j)=1} ((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2</script>
+<p>\begin{equation}
+\min\limits_{x^{(i)}} \frac{1}{2} \sum \limits_{j:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+Now that we have <strong>X</strong>, we can find <strong>Θ</strong> by solving the following optimization problem:</p>
 
-<p>Now that we have <strong>X</strong>, we can find <strong>Θ</strong> by solving the following optimization problem:</p>
+<p>\begin{equation}
+\min \limits_{\theta^{(i)}} \frac{1}{2} \sum \limits_{i:r(i,j)=1} ((\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2
+\end{equation}
+This means that we can start with some random feature matrices <strong>Θ</strong> and <strong>X</strong> and iteratively improve them.
+\begin{equation}\mathbf{\Theta}-&gt;\mathbf{X}-&gt;\mathbf{\Theta}-&gt;\mathbf{X} -&gt; \cdots \end{equation}
+Or we can minimize the following function at once:</p>
 
-<script type="math/tex; mode=display">\\min \\limits\_{\\theta^{(i)}} \\frac{1}{2} \\sum \\limits\_{i:r(i,j)=1} ((\\theta^{(j)})^T x^{(i)}-y^{(i,j)})^2</script>
-
-<p>This means that we can start with some random feature matrices <strong>Θ</strong> and <strong>X</strong> and iteratively improve them.
-<strong>Θ</strong> − &gt;<strong>X</strong> − &gt;<strong>Θ</strong> − &gt;<strong>X</strong> − &gt;⋯</p>
-
-<p>Or we can minimize the following function at once:</p>
-
-<script type="math/tex; mode=display">J(\\mathbf{\\Theta},\\mathbf{X})=\\frac{1}{2} \\sum\\limits\_{(i,j):r(i,j)=1} ((\\theta^{(j)})^T x^{(j)}-y^{(i,j)})^2</script>
-
-<h1 id="programming-a-simple-recommender-system">Programming a Simple Recommender System</h1>
+<p>\begin{equation}J(\mathbf{\Theta},\mathbf{X})=\frac{1}{2} \sum\limits_{(i,j):r(i,j)=1} ((\theta^{(j)})^T x^{(j)}-y^{(i,j)})^2\end{equation}
+Programming a Simple Recommender System
+—————————————</p>
 
 <p>As always we start with loading the data. We use a dataset constaining 943 users and 1682 movies. Since the dataset in provided in mat format we first load the R.matlab library</p>
 
@@ -326,7 +329,7 @@
   <li>Predict</li>
 </ol>
 
-<h3 id="definign-some-parameters">definign some parameters</h3>
+<h3 id="defining-some-parameters">Defining some parameters</h3>
 
 <ul>
   <li><em>n</em><sub><em>u</em></sub>: number of users</li>
@@ -388,8 +391,8 @@
 <p>The gradients which we need:</p>
 
 <ul>
-  <li>$\frac{\partial J}{\partial x_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})\theta^{(j)}_k$</li>
-  <li>$\frac{\partial J}{\partial \theta_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})x^{(i)}_k$</li>
+  <li>$\begin{equation}\frac{\partial J}{\partial x_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})\theta^{(j)}_k\end{equation}$</li>
+  <li>$\begin{equation}\frac{\partial J}{\partial \theta_k^{(i)}}=\sum\limits_{j:r(i,j)=1}((\theta^{(j)})^T x^{(i)}-y^{(i,j)})x^{(i)}_k\end{equation}$</li>
 </ul>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gradF</span><span class="o">&lt;-</span><span class="k">function</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">myY</span><span class="p">,</span><span class="n">myR</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">){</span><span class="w">
@@ -449,7 +452,7 @@
 </span><span class="n">print</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"The cost function after random initilization is %f"</span><span class="p">,</span><span class="n">iCost</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after random initilization is 50228.057258"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] "The cost function after random initilization is 50221.933744"
 </code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="n">TRAIN_RS</span><span class="p">){</span><span class="w">
@@ -476,7 +479,9 @@
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">levelplot</span><span class="p">(</span><span class="n">RATING</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"movies"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"users"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-17-1.png" alt="" /> #Which Movies Should I Watch?</p>
+<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-17-1.png" alt="" /></p>
+
+<h1 id="which-movies-should-i-watch">Which Movies Should I Watch?</h1>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MYRES</span><span class="o">&lt;-</span><span class="n">data.frame</span><span class="p">(</span><span class="n">rating</span><span class="o">=</span><span class="n">RATING</span><span class="p">[,</span><span class="n">ncol</span><span class="p">(</span><span class="n">RATING</span><span class="p">)],</span><span class="n">movienames</span><span class="p">)</span><span class="w">
 </span><span class="n">MYRES</span><span class="o">&lt;-</span><span class="n">MYRES</span><span class="p">[</span><span class="n">order</span><span class="p">(</span><span class="o">-</span><span class="n">MYRES</span><span class="o">$</span><span class="n">rating</span><span class="p">),]</span><span class="w">
@@ -545,11 +550,9 @@
         </div>
         <div class="page-tag">
           
+            <a href="/tags#Productivity" class="tag">&#35; Productivity</a>
+          
             <a href="/tags#Software" class="tag">&#35; Software</a>
-          
-            <a href="/tags#R-Blogger" class="tag">&#35; R-Blogger</a>
-          
-            <a href="/tags#CI" class="tag">&#35; CI</a>
           
         </div>
       </div>

@@ -65,8 +65,14 @@
 	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
 	<!-- Styles -->
 	<link rel="stylesheet" href="/assets/css/main.css">
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>
+        <script type="text/x-mathjax-config">
+              MathJax.Hub.Config({
+              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+               });
+        </script>
+        <script type="text/javascript" async src="path-to-mathjax/MathJax.js?config=TeX-AMS_CHTML"></script>
 </head>
 
 <body>
@@ -118,10 +124,7 @@
 <!--  cycles through tag list and creates header row of all tags used in site with accompanying per-tag counts...-->
   
     
-    <li ><a href="#CI" class="tag">CI <span>(1)</span></a></li>
-  
-    
-    <li ><a href="#R-Blogger" class="tag">R-Blogger <span>(1)</span></a></li>
+    <li ><a href="#Productivity" class="tag">Productivity <span>(1)</span></a></li>
   
     
     <li ><a href="#Software" class="tag">Software <span>(1)</span></a></li>
@@ -130,22 +133,12 @@
 <!--cycles through tag list and creates subheader for each tag name...-->
   
     
-  <h2 id="CI">CI</h2>
+  <h2 id="Productivity">Productivity</h2>
 <!--  lists all posts corresponding to specific tag...-->
     
     <div class="tag-list">
         <span><a href="/recommender-systems/">A Simple Recommender System</a></span>
-        <small><span>| 11 Sep 2017</span></small>
-    </div>
-    
-  
-    
-  <h2 id="R-Blogger">R-Blogger</h2>
-<!--  lists all posts corresponding to specific tag...-->
-    
-    <div class="tag-list">
-        <span><a href="/recommender-systems/">A Simple Recommender System</a></span>
-        <small><span>| 11 Sep 2017</span></small>
+        <small><span>| 26 Apr 2018</span></small>
     </div>
     
   
@@ -155,7 +148,7 @@
     
     <div class="tag-list">
         <span><a href="/recommender-systems/">A Simple Recommender System</a></span>
-        <small><span>| 11 Sep 2017</span></small>
+        <small><span>| 26 Apr 2018</span></small>
     </div>
     
   
