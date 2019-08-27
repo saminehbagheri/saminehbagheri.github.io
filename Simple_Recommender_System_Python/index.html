@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>A Simple Recommender System in Python - Hello, world! I'm Samineh Bagheri</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Hello, world! I'm Samineh Bagheri" property="og:site_name">
+  
+    <meta content="A Simple Recommender System in Python" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="I will be writing about my projects and other things which I am truely interested in this blog." property="og:description">
+  
+  
+    <meta content="http://139.6.66.22:4000/Simple_Recommender_System_Python/" property="og:url">
+  
+  
+    <meta content="2019-08-26T23:00:00+02:00" property="article:published_time">
+    <meta content="http://139.6.66.22:4000/about/" property="article:author">
+  
+  
+    <meta content="http://139.6.66.22:4000/assets/img/cactus.jpg" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Blogging" property="article:tag">
+    
+    <meta content="R-Blogger" property="article:tag">
+    
+    <meta content="Python-Blogger" property="article:tag">
+    
+    <meta content="Recommender System" property="article:tag">
+    
+    <meta content="Matrix Factorization" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@false">
+  
+    <meta name="twitter:title" content="A Simple Recommender System in Python">
+  
+  
+    <meta name="twitter:url" content="http://139.6.66.22:4000/Simple_Recommender_System_Python/">
+  
+  
+    <meta name="twitter:description" content="I will be writing about my projects and other things which I am truely interested in this blog.">
+  
+  
+    <meta name="twitter:image:src" content="http://139.6.66.22:4000/assets/img/cactus.jpg">
+  
+
+	<meta name="description" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-touch-icon-114x114.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>
+        <script type="text/x-mathjax-config">
+              MathJax.Hub.Config({
+              tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+               });
+        </script>
+        <!-- <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML"></script> -->
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/samineh.jpg" alt="Samineh Bagheri"></a>
+      </div>
+      <div class="author-name">Samineh Bagheri</div>
+      <p>I am a PhD Candidate at Leiden University. I am interested in developing intelligent algorithms.</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <!--<li><a href="https://twitter.com/artemsheludko_" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>-->
+        
+        
+          <!--<li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>-->
+        
+        
+          <li class="github"><a href="http://github.com/saminehbagheri" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/samineh-bagheri-87460434" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href="mailto:bagheri.ssa@gmail.com"><i class="fa fa-envelope-o"></i></a></li>
+        
+        
+          <li class="researchgate"><a href="https://www.researchgate.net/profile/Samineh_Bagheri" target="_blank"><i class="fa fa-lg fa-flask"></i></a></li>
+        
+        
+          <li class="researchgate"><a href="https://scholar.google.de/citations?user=PCOLEdQAAAAJ&amp;hl=de" target="_blank"><i class="fa fa-lg fa-graduation-cap"></i></a></li>
+        
+        
+          <li class="researchgate"><a href="http://blogs.gm.fh-koeln.de/ciop/" target="_blank"><i class="fa fa-lg  fa-wordpress"></i></a></li>
+        
+
+
+
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2019 © Samineh Bagheri</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <img class="page-image" src="/assets/img/cactus.jpg" alt="A Simple Recommender System in Python">
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">A Simple Recommender System in Python</h1>
+        <div class="page-date"><span>2019, Aug 26    </span></div>
+      </header>
+      <h1 id="what-are-we-going-to-find-in-this-notebook">What are we going to find in this notebook?</h1>
+<ul>
+  <li><a href="#RS">What Is A Recommender System ?</a></li>
+  <li><a href="#CBRS">Content-Based Recommender System</a></li>
+  <li><a href="#RWDT">A Real-World Dataset</a></li>
+  <li><a href="#MF">Matrix Factorization Based Recommender System</a></li>
+  <li><a href="#MFPy">Programming A Movie Recommender In Python</a></li>
+  <li><a href="#demo">Movie Recommender Demo</a></li>
+</ul>
+
+<p><a id="RS"></a></p>
+<h1 id="what-is-a-recommender-system">What Is A Recommender System?</h1>
+
+<p>Recommender System is the name given to any software designed to recommend you objects (to purchase, to click on or  to watch) which are attractive to you with a high probability. Development of such systems became a hot topic for software developers and machine learning engineers in the last years. A well-performing recommender system can have significant boost in the profit many online platforms make.</p>
+
+<p>Nowadays, many of us interact with recommender systems on a daily basis. If you have an account in Amazon or Netflix or many similar online services, you may have received suggestions that often fit your interest. This can vary from a movie suggested by Netflix or very various products suggested by Amazon. The targeted advertisements on Facebook or the targeted pop-up advertisements in your browser are also other examples of applications of recommender systems. Almost no two person recieves the exact same advertisements or suggestions on an online platform.  All these personalized suggestions and advertistments use recommender systems to find the best match for your interests according to your former ratings, purchase or clicks.</p>
+
+<p>Although some of the suggestions that we receive from the existing automized recommender systems are very promising and suprisingly meet our interests, the opposite can also happen, as these systems are not perfect yet and their developments seems to have a long way ahead to improve. In this blog post I give you a brief overview about a subset of existing algorithms. I try to explain the <em>Matrix Factorization Collaborative Filtering algorithm</em> which is popular method used in many recommender systems,  step by step. I will show you how to programm this algorithm in Python and apply it on a toy problem to build a <a href="https://colab.research.google.com/drive/183a5zoC5DB38QnBh6rUl24sjlTZL-t-i" target="_blank">movie recommender system</a>. Building such simple systems on your own will help us to develop some insights about how the recommender systems interact with our data, as well as letting us know about the issues and weak points of such systems.</p>
+
+<p>Some of different approaches that are often used for recommender systems can be listed as following.</p>
+<ul>
+  <li>Content-Based Recommender System</li>
+  <li>Collaborative Filtering</li>
+  <li>Matrix Factorization</li>
+  <li>Deep Learning</li>
+  <li>Similarity-Based Recommender System
+    <ul>
+      <li>Item-Based</li>
+      <li>User-Based</li>
+    </ul>
+  </li>
+  <li>Hybrid</li>
+</ul>
+
+<p>One of the most straight-forward approaches to find a suitable recommendation for users of a platform is the <em>Content-Based Recommender System</em> approach. This method determines a rating value $R_{ij}$ for a specific user $u_i$ giving to a sepcific object $o_j$ by using a feature vector $\vec{x}_i$ for the $i$-th user and a feature vector for the $j$-th object $\vec{\theta}_j$. We try to explain the idea of this approach in the <a href="#CBRS">next section</a> with a very small example. The biggest problem with such algorithms is that we require to know the important features which have impact on the decisions each user make. It is really difficult to find such set of features. Even if we can define a reasonably good set of important features, the next big challenge is to rate this features for every single item and user. Such information is often not available or not practical to extract fully. Although many platforms have access to some information about the users might be used as features like age, gender etc, often these information are not enough to build good enough feature vectors.</p>
+
+<p><em>Collaborative Filtering</em> algorithms aim at finding the most suitable suggestions for users without taking any explicit features into account and instead they make their decisions only based on the former interaction of the users with the system. These interactions might be number of clicks, user’s ratings, user’s purchases, etc. There are many different types of <em>Collaborative Filtering</em> inclduing the similarity-based algorithms which use some mathematical measures to find similarities between items or users. The item-based similarity-based algorithms suggest the user $i$ who is buying the item $j$ the items which are the most similar to the item $j$. The user-based similarity-based algorithms recommend the user $i$, to take a look at the items bought by the users which have a great similaty to user $i$. If you are an amazon user, you have already experienced interacting with such a system which after your purchase tells you: “The item that you bought is often bought with … and … and …”, listing a few other items. There are many different measures for finding similarity, correlation or dependency between items and/or users including  correlation coefficient of Bravais Pearson, rank-correlation coefficient of Spearman, cosimus similarity, Jaccard coefficient, etc.</p>
+
+<p><em>Matrix Factorization</em> is a different collaborative filtering approach. The main idea behind the matrix factorization is to predict how the user $i$ would rate the item/movie $j$. This prediction is done based on former ratings given by all users. This algorithm is in some sense similar to the content-based method with this difference that we don’t assume that the there are explicitly known features. We try to learn implicit features for all users and all objects by means of matrix factorization. I explian this method with more details and implement it in <a href="#MF">Matrix Factorization</a> Section.</p>
+
+<p>Each of these methods have their own pros and cons and the real-world working recommender systems use a hybrid of different methods. But in this Blog-Post we stick to develop an understaing for the content-based algorithm and grasping the idea of Matrix Factorization and its implementation.</p>
+
+<p>$\color{green}{\text{Before starting}}$ let’s run the following cell to have all the required libraries for this notebook.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">differential_evolution</span>
+<span class="c">#import pdb   #This library is used for debugging the code, otherwise it is not necessary. </span>
+              <span class="c">#You can simply enter pdb.set_trace() somewhere in your code for debugging purposes.</span>
+    
+<span class="c"># If you want to have direct access to the datasets and codes you can clone the following github repository    </span>
+<span class="err">!</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">saminehbagheri</span><span class="o">/</span><span class="n">Recommender</span><span class="o">-</span><span class="n">System</span><span class="o">.</span><span class="n">git</span>
+<span class="o">%</span><span class="n">cd</span> <span class="n">Recommender</span><span class="o">-</span><span class="n">System</span>  
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cloning into 'Recommender-System'...
+remote: Enumerating objects: 66, done.[K
+remote: Counting objects: 100% (66/66), done.[K
+remote: Compressing objects: 100% (63/63), done.[K
+remote: Total 66 (delta 34), reused 0 (delta 0), pack-reused 0[K
+Unpacking objects: 100% (66/66), done.
+/content/Recommender-System
+</code></pre></div></div>
+
+<p><a id="CBRS"></a></p>
+<h1 id="content-based-recommender-system">Content-Based Recommender System</h1>
+
+<p>Let’s start with a simple example for the <strong>content-based approach</strong>.</p>
+
+<p>Let’s imagine a tiny problem where we only have three users: Samineh, Markus and Peter. If we assume that the only important features for these users (of course in a very simplified scenario) are how much a movie is (1)romantic, (2) comedy  or (3) action, then we can assume a feature vector of size 3 for each user. <script type="math/tex">\vec{x}_i=\{interest~in~romance, interest~in~comdey, interest~in~action\}</script>.</p>
+
+<p>We had the chance to ask all of our three users to let us know about their interests by filling their feature vectors. They could have rated each element with 0 if they don’t have any interest, 1 if they really care about that feature and 0.5 if their feeling is somewhere in between.</p>
+
+<p>Samineh just likes romance movies and dislikes action and comedy a lot so her feature matrix look like: $\vec{x_s}=[1,0,0]$. Markus likes comedy movies and is not into romance and action at all $\vec{x_m}=[0,1,0]$. Peter dislikes romance but loves action and doesn’t mind if there is a sense of humor in the movies so his feature vector looks like: $\vec{x_p}=[0,0.5,1]$. Stacking all these feature vectors together makes the user feature matrix.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">USER</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])],</span> 
+                  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Samineh'</span><span class="p">,</span><span class="s">'Markus'</span><span class="p">,</span><span class="s">'Peter'</span><span class="p">],</span>
+                  <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s">'Romantic'</span><span class="p">,</span><span class="s">'Comedy'</span><span class="p">,</span><span class="s">'Action'</span><span class="p">]);</span>
+<span class="k">print</span><span class="p">(</span><span class="n">USER</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          Samineh  Markus  Peter
+Romantic        1     0.0      0
+Comedy          0     1.0      0
+Action          0     0.5      1
+</code></pre></div></div>
+
+<p>We have three movies in our system Titanic, Terminator and Home Alone and we want to figure out what is the best recommendation for each user. In order to do that we need to define a feature vector for each movie. We ask some expert to do that for us. Titanic is a very romantic movie and not funny or action at all so its fair if we rate its feature vector as <script type="math/tex">\vec{\theta}_{Titanic}=[1,0,0]</script>. Terminator is an action movie with very little essence of romance and comedy, so our movie expert filled the Terminator’s feature vector as <script type="math/tex">\vec{\theta}_{Terminator}=[0.2,0.1,1]</script>. The home alone is a comedy movie <script type="math/tex">\vec{\theta}_{Home-alone}=[0.0,1,0.2]</script>. Stacking all of the movie features together will give a movie feature matrix.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ITEM</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([(</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="p">(</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])],</span>
+                  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Titanic'</span><span class="p">,</span><span class="s">'Terminator'</span><span class="p">,</span><span class="s">'Home Alone'</span><span class="p">],</span>
+                  <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s">'Romantic'</span><span class="p">,</span><span class="s">'Comedy'</span><span class="p">,</span><span class="s">'Action'</span><span class="p">]);</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ITEM</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          Titanic  Terminator  Home Alone
+Romantic      1.0         0.0         0.0
+Comedy        0.2         0.1         1.0
+Action        0.0         1.0         0.2
+</code></pre></div></div>
+
+<p>The dot product of the $i$-th user feature vector $\vec{x}_i$ and the $j$-th movie feature <script type="math/tex">\vec{x}_j</script> provides a sort of similarity measure. The larger the dot product <script type="math/tex">\vec{x_i}\cdot\vec{\theta_j}=R_{ij}</script> is the likelier that the user $i$ is going to like the movie $j$. We can determine all the similarity measures for each user and item simply by multiplying the user feature matrix and the movie feature matrix, as follows:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">ITEM</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">USER</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            Samineh  Markus  Peter
+Titanic         1.0     0.2    0.0
+Terminator      0.0     0.6    1.0
+Home Alone      0.0     1.1    0.2
+</code></pre></div></div>
+
+<p>So according to this simple system we can recommend Titanic to Samineh. To Markus we might recommend Home Alone first and as a second choice Terminator. Th best recommendation for Peter is the Terminator.</p>
+
+<p>I think it is already pretty clear that the main problem with the content-based recommnder systems is the missing information about the feature vectors. First of all it is  very complicated to consider all the important features explicitly. Moreover, it is almost impossible to weight all the features for all users and all items. <a href="#MF">Matrix Factorization</a> tries to learn these feature matrices by using the exisitng ratings of users.</p>
+
+<p><a id="RWDT"></a></p>
+<h1 id="real-world-datasets">Real-World Datasets</h1>
+<p>How do the real-world datasets (for recommender systems) often look like? The most common available sort of the data for  recommender systems are user’s rating. The item-user rating matrix often is a huge but sparse matrix.
+The dataset that we use in this blog-post is a movie-user rating dataset.</p>
+
+<p>We start with loading the data.
+We use a dataset with 943 users and 1682 movies. The dataset is provided in mat format. In this mat file there are two matrices. Matrix Y and R.</p>
+
+<p>Y: contains the rating values. Each cell of this matrix can have integer values between 0 to 5. The cells with 0 are actually the unknowns. So, the cell $R_{ij}$=0 means the $i$-th user didn’t give any rating for the $j$-th movie. The cells with any value between 1 to 5 are rated by users. Higher ratings represent higher interests.</p>
+
+<p>R: a matrix having 0 or 1. This matrix has 0 values in the unknown cells and 1 for the cells where a rating is provided.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="s">'ex8_movies.mat'</span><span class="p">)</span>
+<span class="n">movie_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'movie_ids.txt'</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">';'</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">Y</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'Y'</span><span class="p">]</span>
+<span class="n">R</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'R'</span><span class="p">]</span>
+<span class="n">num_user</span><span class="o">=</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">num_movie</span><span class="o">=</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">overallRating</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"number of users:"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">num_user</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"number of movies:"</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">num_movie</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"The overall number of ratings done is: "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">overallRating</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Only "</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">overallRating</span><span class="o">/</span><span class="p">(</span><span class="n">num_user</span><span class="o">*</span><span class="n">num_movie</span><span class="p">))</span><span class="o">+</span><span class="s">"</span><span class="si">%  </span><span class="s">of the matrix is filled"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>number of users:943
+number of movies:1682
+The overall number of ratings done is: 6110
+Only 0.3852152981541189%  of the matrix is filled
+</code></pre></div></div>
+
+<p>Let’s take a look at the rating distribution. The following cell plotsd the frequency of the ratings in a bar-chart.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">howManyR</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    
+<span class="n">ratingFrequency</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Y</span><span class="o">==</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">([</span><span class="s">'dark_background'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">ratingFrequency</span><span class="p">,</span><span class="n">log</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Container object of 6 artists&gt;
+</code></pre></div></div>
+
+<p><img src="output_15_1.png" alt="png"></p>
+
+<p>As we can see on the plot most of the elements of the rating matrix are zeros meaning that the rating matrix is very sparse. So most of the users did not rate most of the movies. The distribution of ratings is skewed to the right side meaning that there more good ratings and bad ones. In order to have a more clear idea about the percentage of ratings given by each user we make the following plot:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ratingPercentage</span><span class="o">=</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">flierprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s">'r'</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                  <span class="n">linestyle</span><span class="o">=</span><span class="s">'none'</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s">'w'</span><span class="p">)</span>
+<span class="n">bp</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">ratingPercentage</span>
+               <span class="p">,</span><span class="n">boxprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+               <span class="p">,</span><span class="n">whiskerprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+               <span class="p">,</span><span class="n">capprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+               <span class="p">,</span><span class="n">medianprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+               <span class="p">,</span><span class="n">flierprops</span><span class="o">=</span><span class="n">flierprops</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'</span><span class="si">% </span><span class="s">rated movie by each user'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>([], &lt;a list of 0 Text xticklabel objects&gt;)
+</code></pre></div></div>
+
+<p><img src="output_17_1.png" alt="png"></p>
+
+<p>In the above plot we can see that most of the users rated less than 10 percent of the movies, although there are very few users who rated up to 40 percent of the movies.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'hot'</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">'none'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Rating Matrix Heatmap </span><span class="se">\n</span><span class="s">'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_19_0.png" alt="png"></p>
+
+<p>The heatmap plot shows the sparsness of the rating matrix clearly.</p>
+
+<p><a id="MF"></a></p>
+<h1 id="matrix-factorization-collaborative-filtering">Matrix Factorization Collaborative Filtering</h1>
+
+<p>Recalling the content-based recommender system, the idea was to describe each item and each user with a vector of important features. In our example the feature vector we used had only three elements, but we are all aware that the there are way more important criteria than those three to impact our interest about a movie and sometimes these features can be more complicated than  simply the genre of the movie. Matrix Factorization assumes that we can describe a movie and a user in a form of a relatively large feature vector reasonably well. The main idea of the Matrix Factorization is to find the proper user feature vector <script type="math/tex">\vec{x}_i</script> and item feature vector <script type="math/tex">\vec{\theta}_j</script> for all users $i=1\cdots n_u$ and movies $j=1\cdots n_m$ which their dot products gives a good estimation of the rating the $i$-th user would give for the $j$-th movie $y_{ij}$.</p>
+
+<p><strong>Why this method is called matrix factorization?</strong> As we already said in the ideal case of finding correct features, the dot product of the user feature vector and the movie feature vector should result in the rating: <script type="math/tex">\vec{x}_i\cdot\vec{\theta}_j=y_{ij}</script>. Let us assume that we stack all the user feature vectors together in user feature matrix <script type="math/tex">\mathbf{X}=\begin{bmatrix}-\vec{x}_1^T-\\ -\vec{x}_2^T- \\ \vdots \\-\vec{x}_{n_u}^T- \end{bmatrix}_{n_u \times n_f}</script> and all the movie feature vectors together in the movie feature matrix <script type="math/tex">\mathbf{\Theta}=\begin{bmatrix}-\vec{\theta}_1^T-\\ -\vec{\theta}_2^T- \\ \vdots \\-\vec{\theta}_{n_m}^T- \end{bmatrix}_{n_m \times n_f}</script>. Then the rating matrix can be determined as follows:</p>
+
+<p>\begin{equation}\mathbf{\Theta} \cdot \mathbf{X}^T=\mathbf{R}\end{equation}</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix}- \vec{\theta}_1^T-\\ - \vec{\theta}_2^T- \\ \vdots \\- \vec{\theta}_{n_m}^T- \end{bmatrix} \cdot \begin{bmatrix}|&|&\cdots&|\\
+               \vec{x_1}&\vec{x_2}&\cdots&\vec{x}_{n_u}\\
+               |&|&\cdots&|\end{bmatrix}=\mathbf{R} %]]></script>
+
+<p>It would be perfect if we had the right feature matrices but we don’t. What we actually have is the rating matrix $\mathbf{Y}$ and we try extract the feature matrices from  $\mathbf{Y}$. The name <strong>matrix factorization</strong> comes from this point that this algorithm tends to find reasonably optimal feature matrices by factorizing the rating matrix  $\mathbf{Y}$.</p>
+
+<p><strong>How does matrix factorization work?</strong> Let’s assume, we initilize the feature matrices with completely random values. The dot product of the <script type="math/tex">i</script>-th user feature vector and the <script type="math/tex">j</script>-th movie feature vector will give <script type="math/tex">p_{ij}</script> which is probably very different to the real given rating <script type="math/tex">y_{ij}</script>. The idea is to find the feature matrices in a way that the error <script type="math/tex">p_{ij}-y_{ij}</script> becomes as minimal as possible for all the given ratings. In other words, the matrix factorization turned into an optimization problem of minimizing a cost function which is the summation of all <script type="math/tex">\color{green}{\text{squared}}</script> errors for all cells with a rating. The cost function to minimize is defined as follows:</p>
+
+<p><script type="math/tex">J(\mathbf{\Theta},\mathbf{X})=\frac{1}{2} \sum\limits_{(i,j):r(i,j)=1} (\vec{\theta}_{j} \vec{x}_{i}-y_{i,j})^2</script></p>
+
+<p><strong>How to solve such an optimization problem?</strong> We can pass the cost function with a random starting point to a black-box derivatuive optimizer and wait until the optimizer finds an optimal solution, but this will take an unaffordbly long time since this optimization problem is very high dimensional. Can you guess what is the input dimension of this optimization problme? $(n_u+n_m)*n_f$, where $n_f$ is the number of features.</p>
+
+<p>It is more logical to calculate the gradients and movie toward the optimal solution iteratively by means of a gradient descent or conjugate gradient methods. It is very straight forward to calculate the gradients as our cost function is a quadratic function.</p>
+
+<h2 id="the-gradients">The Gradients</h2>
+
+<script type="math/tex; mode=display">\frac{\partial J}{\partial x_i^{(k)}}=\sum\limits_{j:r(i,j)=1}(\vec{\theta}_{j} \vec{x}_{i}-y_{i,j})\theta^{(k)}_j,</script>
+
+<script type="math/tex; mode=display">\frac{\partial J}{\partial \theta_j^{(k)}}=\sum\limits_{i:r(i,j)=1}(\vec{\theta}_{j} \vec{x}_{i}-y_{i,j})x^{(k)}_i,</script>
+
+<p>where $x^{(k)}_j$ is the $k$-th element of the $i$-th user feature vector $\vec{x}_i$.</p>
+
+<p>The main steps of the matrix factorization algorithm can be summarized as below:</p>
+
+<ol>
+  <li>Initialize the $\mathbf{\Theta}$ and $\mathbf{X}$ with random small numbers</li>
+  <li>Minimize the cost function $J(\mathbf{\Theta},\mathbf{X})$</li>
+  <li>Use the optimized feature matrices to predict</li>
+</ol>
+
+<p><a id="MFPy"></a></p>
+<h1 id="matrix-factorization-implementation">Matrix Factorization Implementation</h1>
+
+<h2 id="parameter-initilization-function">Parameter Initilization Function</h2>
+<p>This function simply gets the number of users, number of items and number of features as input and returns randomly initilized user feature matrix and item feature matrix.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">initilizeFeat</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">Theta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span><span class="o">*</span><span class="mf">0.05</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span><span class="o">*</span><span class="mf">0.05</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Theta</span>
+</code></pre></div></div>
+
+<h2 id="helper-functions">Helper Functions</h2>
+<p>We have two helper functions. One for flatting the feature matrices into a long 1-D array  and one which convers the long 1-D array into the feature matrices.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">flatterRev</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">):</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">ni</span><span class="o">*</span><span class="n">nf</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">)</span>
+    <span class="n">Theta</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">ni</span><span class="o">*</span><span class="n">nf</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nu</span><span class="p">,</span><span class="n">nf</span><span class="p">),</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span><span class="n">Theta</span>
+
+<span class="k">def</span> <span class="nf">flatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="p">):</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">),</span><span class="n">Theta</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Theta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">Theta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">)])</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+</code></pre></div></div>
+
+<h1 id="cost-function">Cost Function</h1>
+<p>The cost function is simply the implementation of the cost function formula that we have discussed earlier in a vectorized form to avoid nested for-loops for the summations. The only difference is an extra term linked with the parameter $\lambda$, the regularization parameter. We did not describe this parameter in this blog post yet (but the older post talks about it a little bit).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">costFunc</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Theta</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">e</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">-</span><span class="n">R</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="n">la</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="n">la</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">e</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">M</span><span class="o">==</span><span class="bp">False</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">CF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="o">=</span><span class="n">flatterRev</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span>
+    <span class="n">error</span><span class="o">=</span><span class="n">costFunc</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Theta</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="n">la</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error</span>
+</code></pre></div></div>
+
+<h2 id="gradient-function">Gradient Function</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gradFunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span> <span class="p">):</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="o">=</span><span class="n">flatterRev</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">e</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">-</span><span class="n">R</span>
+    <span class="n">TG</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">X</span><span class="p">)</span><span class="o">+</span><span class="n">la</span><span class="o">*</span><span class="n">Theta</span>
+    <span class="n">XG</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">Theta</span><span class="p">)</span><span class="o">+</span><span class="n">la</span><span class="o">*</span><span class="n">X</span>
+    <span class="n">grads</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">XG</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">XG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">XG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">),</span><span class="n">TG</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">TG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">TG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="s">'F'</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">grads</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">M</span><span class="o">==</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="training-function">Training Function</h2>
+
+<p>The trainign function is actually just applying an optimization algorithm on the cost function. We use a built-in conjugate gradient optimizer from the scipy library. You might want to try different methods.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">trainMF</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">nu</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ni</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="o">=</span><span class="n">initilizeFeat</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">flatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="p">)</span>
+    <span class="c"># BFGS crashes</span>
+    <span class="c">#res = minimize(CF, x, args=(R,M,nu,ni,nf,la), method='BFGS',jac=gradFunc,options={'disp': True, 'gtol':1e-6}) </span>
+    
+    <span class="c">#res = minimize(CF, x, args=(R,M,nu,ni,nf,la), method='Newton-CG',jac=gradFunc,options={'disp': True, 'xtol':1e-6})</span>
+    <span class="c">#MSEINIT=CF(x,R,M,nu,ni,nf,la)/np.sum(M==False)</span>
+    <span class="c">#print('INITMSE:'+str(MSEINIT))</span>
+    
+    <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">CF</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s">'CG'</span><span class="p">,</span><span class="n">jac</span><span class="o">=</span><span class="n">gradFunc</span><span class="p">,</span><span class="n">options</span><span class="o">=</span><span class="p">{</span> <span class="s">'disp'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span><span class="s">'gtol'</span><span class="p">:</span><span class="mf">1e-5</span><span class="p">})</span>
+    <span class="n">MSE</span><span class="o">=</span><span class="n">CF</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">MSE</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span>
+
+
+</code></pre></div></div>
+
+<h2 id="predicting-function">Predicting Function</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Predict</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Theta</span><span class="o">=</span><span class="n">flatterRev</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">)</span>
+    <span class="n">predict</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">predict</span><span class="p">)</span>
+    
+</code></pre></div></div>
+
+<h1 id="spliting-training-and-test-datasets">Spliting Training and Test Datasets</h1>
+
+<p>It is important to find a way to evaluate the quality of the trained recommender system. Not always a configuration resulting in a smaller cost function value will give the best possible model on the unseen data. If we increase the number of features to alrge enough value it might result in overfitting which means a very small cost function on the used data for training but a very large error on the unseen instances. In order to have a better evaluation approach we split the data to the training set and test set. This is done by randomly enabling some of the ratings for the training phase and after that using the determined model to measure the cost function on those randomly selected cells. There are different ways of spliting the training and test data sets I am using the most simpleb approach (random selection) in the following cell.</p>
+
+<p>As we have seen in the heatmap plot, our rating matrix does not have a homogenous distribution, so it is smarter if one tries to make sure that training and test datasets have more or less similar distributions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">splitMatrix</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">testPer</span><span class="p">):</span>
+    <span class="n">trainPer</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="n">testPer</span>
+    <span class="n">num_user</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">num_movie</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">overallRating</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">testsize</span><span class="o">=</span><span class="n">testPer</span><span class="o">*</span><span class="n">overallRating</span>
+    <span class="n">testsize</span><span class="o">=</span><span class="n">testsize</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+
+    <span class="c">#split tarining and test dataset</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span> <span class="mi">9273482</span> <span class="p">)</span>
+    <span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">M</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">testSamples</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ind1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">testsize</span><span class="p">)</span>
+    <span class="n">testInd1</span><span class="o">=</span><span class="n">ind1</span><span class="p">[</span><span class="n">testSamples</span><span class="p">]</span>
+    <span class="n">testInd2</span><span class="o">=</span><span class="n">ind2</span><span class="p">[</span><span class="n">testSamples</span><span class="p">]</span>
+
+    <span class="n">trainR</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">trainM</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">trainR</span><span class="p">[</span><span class="n">testInd1</span><span class="p">,</span><span class="n">testInd2</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">trainM</span><span class="p">[</span><span class="n">testInd1</span><span class="p">,</span><span class="n">testInd2</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+
+
+    <span class="n">M</span><span class="o">=</span> <span class="p">(</span><span class="n">trainM</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">testR</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">testM</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">testR</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">testR</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">testM</span><span class="p">[</span><span class="n">testInd1</span><span class="p">,</span><span class="n">testInd2</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">tM</span><span class="o">=</span><span class="p">(</span><span class="n">testM</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">testR</span><span class="o">=</span><span class="n">testR</span><span class="o">*</span><span class="n">testM</span>
+    <span class="n">testR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">testR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">trainR</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">testR</span><span class="p">,</span> <span class="n">tM</span><span class="p">,</span> <span class="n">mu</span>
+</code></pre></div></div>
+
+<h2 id="test-error-function">Test Error Function</h2>
+
+<p>There are different approaches to evalaute how a recommender system is doing on the test data. One approach is to calculate the mean squared error for the test data. Another approach is to measure some sort of predicting accuracy. In the following cell we define accuracy as the percentage of the predicted ratings which have error of 1 or less.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">testMF</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">predict</span><span class="p">):</span>
+    <span class="n">tR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">e</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">tR</span><span class="o">-</span><span class="n">predict</span><span class="p">)</span>
+    <span class="n">testMSE</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">tM</span><span class="o">==</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">testMSE</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">accuracyMF</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">predict</span><span class="p">):</span>
+    <span class="n">tR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">diff</span><span class="o">=</span><span class="n">tR</span><span class="o">-</span><span class="n">predict</span>
+    <span class="n">e</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+    <span class="n">diff</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">e</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">e</span><span class="o">!=</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">e</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">accu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">tM</span><span class="o">==</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">accu</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plotDensity</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">FinalPredict</span><span class="p">):</span>
+    <span class="n">tR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">FinalPredict</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">FinalPredict</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">tM</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">([</span><span class="s">'dark_background'</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">tR</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">shade</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bw</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"blue"</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">FinalPredict</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">shade</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bw</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"olive"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+</code></pre></div></div>
+
+<h2 id="looking-for-the-best-parameter-setting">Looking For The Best Parameter Setting</h2>
+
+<p>Our algorithm has two parameters which have to be set in prior: the regularization factor, $\lambda$ and the number of features $n_f$. We can tune these parameters by doing a grid search. The cell below searches for the best $n_f$ for a fixed regualization factor. If you want activate this cell then comment the line NF=[].</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DORUN</span><span class="o">=</span><span class="bp">False</span>
+
+<span class="n">trainR</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">testR</span><span class="p">,</span> <span class="n">tM</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">splitMatrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">NF</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]</span>
+<span class="n">myseed</span><span class="o">=</span><span class="mi">5623</span>
+<span class="k">if</span> <span class="n">DORUN</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">nf</span> <span class="ow">in</span> <span class="n">NF</span><span class="p">:</span>
+        <span class="n">trainR</span><span class="o">=</span><span class="n">trainR</span><span class="o">-</span><span class="n">mu</span><span class="p">[:,</span><span class="bp">None</span><span class="p">]</span>
+        <span class="n">trainingError</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">trainMF</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">myseed</span><span class="p">)</span>
+        <span class="n">mypredict</span><span class="o">=</span><span class="n">Predict</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">zeropredict</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">mypredict</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">mypredict</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">testR</span><span class="o">=</span><span class="n">testR</span><span class="o">-</span><span class="n">mu</span><span class="p">[:,</span><span class="bp">None</span><span class="p">]</span>
+        <span class="n">testError</span><span class="o">=</span><span class="n">testMF</span><span class="p">(</span><span class="n">testR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">mypredict</span><span class="p">)</span>
+        <span class="n">accuracy</span><span class="o">=</span><span class="n">accuracyMF</span><span class="p">(</span><span class="n">testR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">mypredict</span><span class="p">)</span>
+        <span class="n">accuracyTrain</span><span class="o">=</span><span class="n">accuracyMF</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">mypredict</span><span class="p">)</span>
+        <span class="n">accuracyz</span><span class="o">=</span><span class="n">accuracyMF</span><span class="p">(</span><span class="n">testR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">zeropredict</span><span class="p">)</span>
+        <span class="n">accuracyTrainz</span><span class="o">=</span><span class="n">accuracyMF</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">zeropredict</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Training Error:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">trainingError</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Test Error:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">testError</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Accuracy After Optimization:test:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">accuracy</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Accuracy If we always guess 0:test:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">accuracyz</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Accuracy After Optimization:train:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">accuracyTrain</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'[nf='</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nf</span><span class="p">)</span><span class="o">+</span><span class="s">']'</span><span class="o">+</span><span class="s">'Accuracy If we always guess 0:train:'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">accuracyTrainz</span><span class="p">))</span>
+        <span class="n">plotDensity</span><span class="p">(</span><span class="n">testR</span><span class="p">,</span><span class="n">tM</span><span class="p">,</span><span class="n">mypredict</span><span class="p">)</span>
+ 
+</code></pre></div></div>
+
+<h1 id="building-the-recommender-system-model">Building the Recommender System Model</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">runEXAMPLE</span><span class="o">=</span><span class="bp">False</span>
+<span class="k">def</span> <span class="nf">buildRSModel</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">mu</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nf</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">movie_names</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">trainM</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+
+    <span class="n">trainR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">trainM</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mu</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">trainR</span><span class="o">-</span><span class="n">mu</span><span class="p">[:,</span><span class="bp">None</span><span class="p">]</span>
+    <span class="n">trainingError</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">trainMF</span><span class="p">(</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="n">la</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">=</span><span class="p">{</span><span class="s">'trainingError'</span><span class="p">:</span> <span class="n">trainingError</span><span class="p">,</span> <span class="s">'res'</span><span class="p">:</span><span class="n">res</span><span class="p">,</span><span class="s">'nu'</span><span class="p">:</span><span class="n">nu</span><span class="p">,</span><span class="s">'ni'</span><span class="p">:</span><span class="n">ni</span><span class="p">,</span><span class="s">'nf'</span><span class="p">:</span><span class="n">nf</span><span class="p">,</span> <span class="s">'la'</span><span class="p">:</span><span class="n">la</span><span class="p">,</span> <span class="s">'movie_names'</span><span class="p">:</span><span class="n">movie_names</span><span class="p">,</span> <span class="s">'mu'</span><span class="p">:</span><span class="n">mu</span><span class="p">,</span>
+          <span class="s">'R'</span><span class="p">:</span><span class="n">R</span><span class="p">,</span><span class="s">'M'</span><span class="p">:</span><span class="n">M</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="c">#Example</span>
+<span class="k">if</span> <span class="n">runEXAMPLE</span><span class="p">:</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'Y'</span><span class="p">]</span>
+    <span class="n">M</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'R'</span><span class="p">]</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">trainM</span><span class="o">=</span> <span class="p">(</span><span class="n">M</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mymodel</span><span class="o">=</span><span class="n">buildRSModel</span><span class="p">(</span><span class="n">R</span><span class="o">=</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="o">=</span><span class="n">trainM</span><span class="p">,</span><span class="n">mu</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nf</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">movie_names</span><span class="o">=</span><span class="n">movie_names</span><span class="p">)</span>
+    <span class="c">#print(mymodel)</span>
+</code></pre></div></div>
+
+<h1 id="predicting-for-user-x">Predicting for User X</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">runEXAMPLE</span><span class="o">=</span><span class="bp">False</span>
+<span class="k">def</span> <span class="nf">predictForUserX</span><span class="p">(</span><span class="n">user_Id</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">movie_Id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">trainingError</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'trainingError'</span><span class="p">]</span>
+    <span class="n">res</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'res'</span><span class="p">]</span>
+    <span class="n">nu</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'nu'</span><span class="p">]</span>
+    <span class="n">ni</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'ni'</span><span class="p">]</span>
+    <span class="n">nf</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'nf'</span><span class="p">]</span>
+    <span class="n">la</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'la'</span><span class="p">]</span>
+    <span class="n">movie_names</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'movie_names'</span><span class="p">]</span>
+    <span class="n">mu</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'mu'</span><span class="p">]</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'R'</span><span class="p">]</span>
+    <span class="n">M</span><span class="o">=</span><span class="n">model</span><span class="p">[</span><span class="s">'M'</span><span class="p">]</span>
+    <span class="n">mypredict</span><span class="o">=</span><span class="n">Predict</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">nu</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mydata</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">Pred</span><span class="o">=</span><span class="n">mypredict</span><span class="p">[:,</span><span class="n">user_Id</span><span class="p">]</span><span class="o">+</span><span class="n">mu</span><span class="p">[</span><span class="n">user_Id</span><span class="p">]</span>
+    <span class="n">mydata</span><span class="p">[</span><span class="s">'names'</span><span class="p">]</span><span class="o">=</span><span class="n">movie_names</span>
+    <span class="n">mydata</span><span class="p">[</span><span class="s">'predictedRating'</span><span class="p">]</span><span class="o">=</span><span class="n">Pred</span>
+    <span class="n">mydata</span><span class="p">[</span><span class="s">'originalrating'</span><span class="p">]</span><span class="o">=</span><span class="n">R</span><span class="p">[:,</span><span class="n">user_Id</span><span class="p">]</span>
+    <span class="n">mydata</span><span class="o">=</span><span class="n">mydata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s">'predictedRating'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">=</span><span class="n">mydata</span><span class="p">[</span><span class="n">mydata</span><span class="p">[</span><span class="s">'originalrating'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+<span class="c">#Example</span>
+<span class="k">if</span> <span class="n">runEXAMPLE</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">predictForUserX</span><span class="p">(</span><span class="mi">934</span><span class="p">,</span><span class="n">mymodel</span><span class="p">,</span><span class="n">movie_Id</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+</code></pre></div></div>
+
+<h1 id="enter-your-own-rating">Enter Your Own Rating</h1>
+
+<p>You can use this function to enter your own rating and see what the system suggests. If you do not set the modelparam, then the default values of nf=100, la=0.1 are going to be used.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">weRecommend</span><span class="p">(</span><span class="n">myratings</span><span class="p">,</span><span class="n">modelparam</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">movie_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'movie_ids.txt'</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s">';'</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="s">'ex8_movies.mat'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Reading the data"</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'Y'</span><span class="p">]</span>
+    <span class="n">M</span><span class="o">=</span><span class="n">mat</span><span class="p">[</span><span class="s">'R'</span><span class="p">]</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">trainM</span><span class="o">=</span> <span class="p">(</span><span class="n">M</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">num_user</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">num_movie</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    
+    <span class="n">myratings</span><span class="o">=</span><span class="n">myratings</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s">'names'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">movies</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">movie_names</span><span class="p">)</span>
+    <span class="n">movies</span><span class="o">=</span><span class="n">movies</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">indices</span><span class="o">=</span><span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span> <span class="n">myratings</span><span class="p">[</span><span class="s">'names'</span><span class="p">])]</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">newuserratingR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_movie</span><span class="p">)</span>
+    <span class="n">newuserratingM</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_movie</span><span class="p">)</span>
+    <span class="n">newuserratingR</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">=</span><span class="n">myratings</span><span class="p">[</span><span class="s">'rating'</span><span class="p">]</span>
+    <span class="n">newuserratingM</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    
+    <span class="n">newuserratingM</span><span class="o">=</span> <span class="p">(</span><span class="n">newuserratingM</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">trainR</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">newuserratingR</span><span class="p">[:,</span><span class="bp">None</span><span class="p">],</span><span class="n">trainR</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">trainM</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">newuserratingM</span><span class="p">[:,</span><span class="bp">None</span><span class="p">],</span><span class="n">trainM</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Training the Recommender System..."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">modelparam</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">mymodel</span><span class="o">=</span><span class="n">buildRSModel</span><span class="p">(</span><span class="n">R</span><span class="o">=</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="o">=</span><span class="n">trainM</span><span class="p">,</span><span class="n">mu</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nf</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">movie_names</span><span class="o">=</span><span class="n">movie_names</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nf</span><span class="o">=</span><span class="n">modelparam</span><span class="p">[</span><span class="s">'nf'</span><span class="p">]</span>
+        <span class="n">la</span><span class="o">=</span><span class="n">modelparam</span><span class="p">[</span><span class="s">'la'</span><span class="p">]</span> 
+        <span class="n">mymodel</span><span class="o">=</span><span class="n">buildRSModel</span><span class="p">(</span><span class="n">R</span><span class="o">=</span><span class="n">trainR</span><span class="p">,</span><span class="n">M</span><span class="o">=</span><span class="n">trainM</span><span class="p">,</span><span class="n">mu</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nf</span><span class="o">=</span><span class="n">nf</span><span class="p">,</span><span class="n">la</span><span class="o">=</span><span class="n">la</span><span class="p">,</span> <span class="n">movie_names</span><span class="o">=</span><span class="n">movie_names</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Training is successfully finished"</span><span class="p">)</span>   
+    <span class="n">bests</span><span class="o">=</span><span class="n">predictForUserX</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">mymodel</span><span class="p">,</span><span class="n">movie_Id</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">worsts</span><span class="o">=</span><span class="n">predictForUserX</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">mymodel</span><span class="p">,</span><span class="n">movie_Id</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Predicting you're ratings:"</span><span class="p">)</span>
+    <span class="n">bests</span><span class="o">=</span><span class="n">bests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">worsts</span><span class="o">=</span><span class="n">worsts</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">output</span><span class="o">=</span><span class="p">{</span><span class="s">'bests'</span><span class="p">:</span><span class="n">bests</span><span class="p">,</span><span class="s">'worsts'</span><span class="p">:</span><span class="n">worsts</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+  
+
+</code></pre></div></div>
+
+<p><a id="demo"></a></p>
+<h1 id="demo">Demo</h1>
+
+<p>You can go to <a href="https://colab.research.google.com/github/saminehbagheri/Recommender-System/blob/master/WhatToWatch.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a> to play around and test the system’s behavior with your different ratings. The data and the source code can be found in this <a href="https://github.com/saminehbagheri/Recommender-System">github repository</a>.</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=A%20Simple%20Recommender%20System%20in%20Python&amp;url=http://139.6.66.22:4000/Simple_Recommender_System_Python/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=http://139.6.66.22:4000/Simple_Recommender_System_Python/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=http://139.6.66.22:4000/Simple_Recommender_System_Python/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Blogging" class="tag"># Blogging</a>
+          
+            <a href="/tags#R-Blogger" class="tag"># R-Blogger</a>
+          
+            <a href="/tags#Python-Blogger" class="tag"># Python-Blogger</a>
+          
+            <a href="/tags#Recommender%20System" class="tag"># Recommender System</a>
+          
+            <a href="/tags#Matrix%20Factorization" class="tag"># Matrix Factorization</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

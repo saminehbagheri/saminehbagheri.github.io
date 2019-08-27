@@ -83,7 +83,9 @@
               tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
                });
         </script>
-        <script type="text/javascript" async src="path-to-mathjax/MathJax.js?config=TeX-AMS_CHTML"></script>
+        <!-- <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML"></script> -->
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> 
+
 </head>
 
 <body>
@@ -237,7 +239,7 @@ Programming a Simple Recommender System
 </span><span class="n">axis</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">at</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">countFrame</span><span class="o">$</span><span class="n">rating</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-2-1.png" alt="" /></p>
+<p><img src="unnamed-chunk-2-1.png" alt="" /></p>
 
 <p>What percentage of the movies are rated by each user?</p>
 
@@ -245,7 +247,7 @@ Programming a Simple Recommender System
 </span><span class="n">boxplot</span><span class="p">(</span><span class="n">RM</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"% rated movies"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-3-1.png" alt="" /> We can see that most of the users rated less than 10 percent of the movies, although there are very few users who rated up to 40 percent of the movies.</p>
+<p><img src="unnamed-chunk-3-1.png" alt="" /> We can see that most of the users rated less than 10 percent of the movies, although there are very few users who rated up to 40 percent of the movies.</p>
 
 <h3 id="averaged-user-rating-and-the-best-movies">Averaged user-rating and the best movies</h3>
 
@@ -276,7 +278,7 @@ Programming a Simple Recommender System
 </span><span class="n">levelplot</span><span class="p">(</span><span class="n">myY</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"movie"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"user"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-5-1.png" alt="" /></p>
+<p><img src="unnamed-chunk-5-1.png" alt="" /></p>
 
 <p>Then we merge the information to the list of movies and take a fast look at the best movies.</p>
 
@@ -491,7 +493,7 @@ Programming a Simple Recommender System
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">levelplot</span><span class="p">(</span><span class="n">RATING</span><span class="p">,</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"movies"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"users"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="RS-movie_files/figure-markdown_github/unnamed-chunk-17-1.png" alt="" /></p>
+<p><img src="unnamed-chunk-17-1.png" alt="" /></p>
 
 <h1 id="which-movies-should-i-watch">Which Movies Should I Watch?</h1>
 
